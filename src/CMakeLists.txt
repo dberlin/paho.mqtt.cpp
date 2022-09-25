@@ -61,6 +61,12 @@ add_library(paho-cpp-objs OBJECT
   will_options.cpp
 )
 
+## --- C++11 build flags ---
+
+set_property(paho-cpp-objs PROPERTY CXX_STANDARD 11)
+set_property(paho-cpp-objs PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(paho-cpp-objs PROPERTY CXX_EXTENSIONS OFF)
+
 ## install the shared library
 #install(TARGETS paho-cpp-objs EXPORT PahoMqttCpp
 #    OBJECTS DESTINATION ${CMAKE_INSTALL_LIBDIR}
