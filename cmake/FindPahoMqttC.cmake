@@ -23,6 +23,11 @@ if(PAHO_WITH_MQTT_C)
 
     find_path(PAHO_MQTT_C_INCLUDE_DIRS NAMES MQTTAsync.h 
         HINTS ${CMAKE_CURRENT_SOURCE_DIR}/externals/paho-mqtt-c/src)
+	if(PAHO_WITH_SSL)
+		set_target_properties(${_PAHO_MQTT_C_LIB_NAME} PROPERTIES
+       						  INTERFACE_COMPILE_DEFINITIONS "OPENSSL=1"
+      						  INTERFACE_LINK_LIBRARIES "OpenSSL::SSL;OpenSSL::Crypto")
+	endif()
 else()
     find_library(PAHO_MQTT_C_LIBRARIES NAMES ${_PAHO_MQTT_C_LIB_NAME})
     unset(_PAHO_MQTT_C_LIB_NAME)
@@ -34,13 +39,14 @@ else()
         IMPORTED_LOCATION "${PAHO_MQTT_C_LIBRARIES}"
         INTERFACE_INCLUDE_DIRECTORIES "${PAHO_MQTT_C_INCLUDE_DIRS}"
         IMPORTED_LINK_INTERFACE_LANGUAGES "C")
+	if(PAHO_WITH_SSL)
+		set_target_properties(PahoMqttC::PahoMqttC PROPERTIES
+       						  INTERFACE_COMPILE_DEFINITIONS "OPENSSL=1"
+      						  INTERFACE_LINK_LIBRARIES "OpenSSL::SSL;OpenSSL::Crypto")
+	endif()
 endif()
 
-if(PAHO_WITH_SSL)
-set_target_properties(PahoMqttC::PahoMqttC PROPERTIES
-        INTERFACE_COMPILE_DEFINITIONS "OPENSSL=1"
-        INTERFACE_LINK_LIBRARIES "OpenSSL::SSL;OpenSSL::Crypto")
-endif()
+
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(PahoMqttC REQUIRED_VARS PAHO_MQTT_C_INCLUDE_DIRS)
